@@ -23,7 +23,7 @@ public class Cell
 		{
 			if( this.struckByMissle )
 				return 'x';
-			return 'c';
+			return ' ';
 		}
 		//a ship is at this cell
 		return ship.drawShipStatusAtCell( this.struckByMissle );			
