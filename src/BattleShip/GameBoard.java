@@ -64,7 +64,7 @@ public class GameBoard
 		ArrayList<Cell> position = new ArrayList<Cell>();
 
 		switch (bowDirection) {
-		case NORTH: if(sternLocation.y - s.getLength() < 0){
+		case NORTH: if(sternLocation.y - s.getLength() - 1  < 0){
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -77,13 +77,12 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
+			s.setPosition(position);
 			return true;
 		}
-		case SOUTH: if(sternLocation.y + s.getLength() >= rowCount){
-
+		case SOUTH: if(sternLocation.y + s.getLength() - 1 >= rowCount){ 
 			return false;
 		} else{
-
 			for(int i = 0; i < s.getLength(); i++){
 				Cell c = cells.get(sternLocation.x).get(sternLocation.y + i);
 				if(c.getShip() != null){
@@ -94,11 +93,12 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
+			s.setPosition(position);
 			return true;
 
 		}
 
-		case EAST: if(sternLocation.x + s.getLength() >= colCount){
+		case EAST: if(sternLocation.x + s.getLength() - 1 >= colCount){
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -111,11 +111,12 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
+			s.setPosition(position);
 			return true;
 
 		}
 
-		case WEST: if(sternLocation.x - s.getLength() < 0){
+		case WEST: if(sternLocation.x - s.getLength() - 1 < 0){
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -128,6 +129,7 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
+			s.setPosition(position);
 			return true;
 
 		}
