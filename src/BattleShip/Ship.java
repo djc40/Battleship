@@ -6,7 +6,6 @@ abstract public class Ship
 {
 	protected ArrayList< Cell > position = null;
 	protected String name = "Unnamed";
-	
 	public Ship( String name )
 	{
 		this.name = name;

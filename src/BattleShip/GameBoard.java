@@ -13,8 +13,8 @@ public class GameBoard
 
 	public GameBoard( int rowCount, int colCount )
 	{
-		this.rowCount = rowCount;
-		this.colCount = colCount;
+		this.rowCount = rowCount; //y var
+		this.colCount = colCount; //x var
 
 		//create the 2D array of cells
 		cells = new ArrayList< ArrayList<Cell>>();
@@ -31,22 +31,20 @@ public class GameBoard
 
 		StringBuilder s = new StringBuilder();
 		s.append("+");
-		for(int i = 0; i < cells.get(0).size(); i++){
+		for(int i = 0; i < cells.size(); i++){
 			s.append("-");
 		}
 		s.append("+\n");
 		for(int i = 0; i < cells.get(0).size(); i++){
 			s.append("|");
 			for(int j = 0; j <cells.size(); j++){
-				s.append(cells.get(i).get(j).draw());
+				s.append(cells.get(j).get(i).draw());
 			}
-			s.append("|");
-
-			s.append("\n");
+			s.append("|\n");
 
 		}
 		s.append("+");
-		for(int i = 0; i < cells.get(0).size(); i++){
+		for(int i = 0; i < cells.size(); i++){
 			s.append("-");
 		}
 		s.append("+\n"); 
@@ -64,7 +62,7 @@ public class GameBoard
 		ArrayList<Cell> position = new ArrayList<Cell>();
 
 		switch (bowDirection) {
-		case NORTH: if(sternLocation.y - s.getLength() - 1  < 0){
+		case NORTH: if(sternLocation.y - (s.getLength() - 1)  < 0){
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -77,10 +75,9 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
-			s.setPosition(position);
-			return true;
+			break;
 		}
-		case SOUTH: if(sternLocation.y + s.getLength() - 1 >= rowCount){ 
+		case SOUTH: if(sternLocation.y + (s.getLength() - 1) >= rowCount){ 
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -93,12 +90,10 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
-			s.setPosition(position);
-			return true;
-
+			break; 
 		}
 
-		case EAST: if(sternLocation.x + s.getLength() - 1 >= colCount){
+		case EAST: if(sternLocation.x + (s.getLength() - 1) >= colCount){
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -111,12 +106,10 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
-			s.setPosition(position);
-			return true;
-
+			break; 
 		}
 
-		case WEST: if(sternLocation.x - s.getLength() - 1 < 0){
+		case WEST: if(sternLocation.x - (s.getLength() - 1) < 0){
 			return false;
 		} else{
 			for(int i = 0; i < s.getLength(); i++){
@@ -129,13 +122,14 @@ public class GameBoard
 			for(Cell c : position){
 				c.setShip(s);
 			}
-			s.setPosition(position);
-			return true;
-
-		}
+			break;
+}
 		default: return false;
 		}
-	}
+			s.setPosition(position);
+			myShips.add(s);
+			return true;
+}
 
 	//Returns A reference to a ship, if that ship was struck by a missle.
 	//The returned ship can then be used to print the name of the ship which
@@ -143,7 +137,25 @@ public class GameBoard
 	//Ensure you handle missiles that may fly off the grid
 	public Ship fireMissle( Position coordinate )
 	{
-
+		if(coordinate.x < 0 || coordinate.x > colCount){
+			System.out.println("Please only use coordinates on the board");
+			return null;
+		}
+		if(coordinate.y < 0 || coordinate.y > rowCount){
+			System.out.println("Please only use coordinates on the board");
+			return null;
+		}
+		
+		Cell firedAt = cells.get(coordinate.x).get(coordinate.y);
+		firedAt.hasBeenStruckByMissile(true);
+		if(firedAt.getShip() != null){
+			Ship s = firedAt.getShip();
+			return s;
+		}else{
+			return null;
+		}
+		
+		
 	}
 
 	//Here's a simple driver that should work without touching any of the code below this point
@@ -154,35 +166,35 @@ public class GameBoard
 		System.out.println("about to draw board");
 		System.out.println( b.draw() );
 
-		//		Ship s = new Cruiser( "Cruiser" );
-		//		if( b.addShip(s, new Position(3,6), HEADING.WEST ) )
-		//			System.out.println( "Added " + s.getName() + "Location is " );
-		//		else
-		//			System.out.println( "Failed to add " + s.getName() );
-		//		
-		//		s = new Destroyer( "Vader" );
-		//		if( b.addShip(s, new Position(3,5), HEADING.NORTH ) )
-		//			System.out.println( "Added " + s.getName() + "Location is " );
-		//		else
-		//			System.out.println( "Failed to add " + s.getName() );
-		//		
-		//		System.out.println( b.draw() );
-		//		
-		//		b.fireMissle( new Position(3,5) );
-		//		System.out.println( b.draw() );
-		//		b.fireMissle( new Position(3,4) );
-		//		System.out.println( b.draw() );
-		//		b.fireMissle( new Position(3,3) );
-		//		System.out.println( b.draw() );
-		//		
-		//		b.fireMissle( new Position(0,6) );
-		//		b.fireMissle( new Position(1,6) );
-		//		b.fireMissle( new Position(2,6) );
-		//		b.fireMissle( new Position(3,6) );
-		//		System.out.println( b.draw() );
-		//		
-		//		b.fireMissle( new Position(6,6) );
-		//		System.out.println( b.draw() );
+				Ship s = new Cruiser( "Cruiser" );
+				if( b.addShip(s, new Position(3,6), HEADING.WEST ) )
+					System.out.println( "Added " + s.getName() + "Location is " );
+				else
+					System.out.println( "Failed to add " + s.getName() );
+				
+				s = new Destroyer( "Vader" );
+				if( b.addShip(s, new Position(3,5), HEADING.NORTH ) )
+					System.out.println( "Added " + s.getName() + "Location is " );
+				else
+					System.out.println( "Failed to add " + s.getName() );
+				
+				System.out.println( b.draw() );
+				
+				b.fireMissle( new Position(3,5) );
+				System.out.println( b.draw() );
+				b.fireMissle( new Position(3,4) );
+				System.out.println( b.draw() );
+				b.fireMissle( new Position(3,3) );
+				System.out.println( b.draw() );
+				
+				b.fireMissle( new Position(0,6) );
+				b.fireMissle( new Position(1,6) );
+				b.fireMissle( new Position(2,6) );
+				b.fireMissle( new Position(3,6) );
+				System.out.println( b.draw() );
+				
+				b.fireMissle( new Position(6,6) );
+				System.out.println( b.draw() );
 	}
 
 }
