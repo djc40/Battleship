@@ -23,6 +23,13 @@ public class GameManager
 	//so a client is able to use this method to get a reference to his opponent
 	public Client getOpponent( Client me )
 	{
+		for(Client c: clients){
+			if(!c.equals(me)){
+				return c;
+			}
+			
+		}
+		return null;
 	}
 	
 	//In a asychronous nature, begin playing the game. This should only occur after 
@@ -45,11 +52,51 @@ public class GameManager
 	//Don't forget about try/finally blocks, if needed
 	boolean waitFor2PlayersToConnect() throws IOException
 	{
+		ServerSocket serverSocket = null;
+		Socket clientSocket1 = null;
+		Socket clientSocket2 = null;
+		try{
+			serverSocket = new ServerSocket(10000);
+			System.out.println("Server Socket started");
+		}catch (IOException e){
+		return false;	
+		}
+		try{
+			clientSocket1 = serverSocket.accept();
+
+		}catch (IOException e){
+			System.err.println("Accept Failed");
+		}
+		System.out.println("Connected");
+		
+		PrintWriter out = new PrintWriter(clientSocket1.getOutputStream(), true);
+		BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket1.getInputStream()));
+		Client client1 = new Client(in, out, this);
+		clients.add(client1);
+		
+		try{
+			clientSocket2 = serverSocket.accept();
+		}catch (IOException e){
+			System.err.println("Accept Failed");
+		}
+		System.out.println("Connected");
+
+		out = new PrintWriter(clientSocket2.getOutputStream(), true);
+		in = new BufferedReader(new InputStreamReader(clientSocket2.getInputStream()));
+		Client client2 = new Client(in, out, this);
+		clients.add(client2);
+		
+		return true;
 	}
 	
 	//let players initialize their name, and gameboard here. This should be done asynchronously
 	void initPlayers() throws IOException
 	{
+		clients.parallelStream().forEach( client ->{
+			try{client.initPlayer();}
+			catch(Exception e){e.printStackTrace();
+		}}
+			);
 	}
 	
 	

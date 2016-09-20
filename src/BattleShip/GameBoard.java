@@ -30,24 +30,25 @@ public class GameBoard
 	{
 
 		StringBuilder s = new StringBuilder();
+		s.append(LINE_END);
 		s.append("+");
 		for(int i = 0; i < cells.size(); i++){
 			s.append("-");
 		}
-		s.append("+\n");
+		s.append("+" + LINE_END);
 		for(int i = 0; i < cells.get(0).size(); i++){
 			s.append("|");
 			for(int j = 0; j <cells.size(); j++){
 				s.append(cells.get(j).get(i).draw());
 			}
-			s.append("|\n");
+			s.append("|" + LINE_END);
 
 		}
 		s.append("+");
 		for(int i = 0; i < cells.size(); i++){
 			s.append("-");
 		}
-		s.append("+\n"); 
+		s.append("+" + LINE_END); 
 		return s.toString();
 		//draw the entire board... I'd use a StringBuilder object to improve speed
 		//remember - you must draw one entire row at a time, and don't forget the
