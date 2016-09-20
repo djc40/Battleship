@@ -67,10 +67,10 @@ public class Client
 		return true;
 	}
 
-void drawBoard(){
-	out.println( "Target Board:" + this.targets.draw() );
-	out.println( "Your Ships: " + this.board.draw() );
-}
+	void drawBoard(){
+		out.println( "Target Board:" + this.targets.draw() );
+		out.println( "Your Ships: " + this.board.draw() );
+	}
 	//Returns a bool, true iff all of the opponent's ships are destroyed
 	boolean allEnemyShipsAreDestroyed()
 	{
@@ -163,16 +163,15 @@ void drawBoard(){
 
 		int count = 1;
 		while(count < 3){
-		out.println("Enter Ship " + count + "  information:" );
-		out.flush();
-		String input = in.readLine();
-		try{
-		cShipAdd(input);
-		count++;
-		}
-		catch(Exception e){
-			out.println("Not correct format");
-		}
+			out.println("Enter Ship " + count + "  information:" );
+			out.flush();
+			String input = in.readLine();
+			try{if(cShipAdd(input)){
+				count++;
+			}}
+			catch(Exception e){
+				out.println("Not correct format");
+			}
 		}
 
 		//Get ship locations from the player for all 2 ships (or more than 2 if you're using more ships)
@@ -185,7 +184,7 @@ void drawBoard(){
 		out.println( "Waiting for other player to finish their setup, then war will ensue!" );
 	}
 
-	private void cShipAdd(String input) {
+	private boolean cShipAdd(String input) {
 		String[] inputSplit = input.split(" ");
 		HEADING nHead = null; 
 
@@ -203,19 +202,17 @@ void drawBoard(){
 			nHead = HEADING.EAST;
 			break;
 		default:
-			break;
+			return false;
 
 		}
 
 		switch(inputSplit[0]){
 		case "D":
-			board.addShip(new Destroyer(input.substring(8)), new Position(Integer.parseInt(inputSplit[1]),Integer.parseInt(inputSplit[2])), nHead);
-			break;
+			return board.addShip(new Destroyer(input.substring(8)), new Position(Integer.parseInt(inputSplit[1]),Integer.parseInt(inputSplit[2])), nHead);
 		case "C":
-			board.addShip(new Cruiser(input.substring(8)), new Position(Integer.parseInt(inputSplit[1]),Integer.parseInt(inputSplit[2])), nHead);
-			break;
+			return board.addShip(new Cruiser(input.substring(8)), new Position(Integer.parseInt(inputSplit[1]),Integer.parseInt(inputSplit[2])), nHead);
 		default:
-			break;
+			return false;
 		}
 	}
 
