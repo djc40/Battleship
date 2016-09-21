@@ -25,7 +25,6 @@ public class Client
 
 	public void playGame() throws IOException
 	{
-		this.targets = man.getOpponent(this).getGameBoard();
 		this.out.println( NEWL + NEWL + "   Missiles Away! Game has begun" );
 		this.out.println( "   To Launch a missle at your enemy:" );
 		this.out.println( "F 2 4" );
@@ -74,7 +73,7 @@ public class Client
 	//Returns a bool, true iff all of the opponent's ships are destroyed
 	boolean allEnemyShipsAreDestroyed()
 	{
-		ArrayList<Ship> theirShips = targets.myShips;
+		ArrayList<Ship> theirShips = man.getOpponent(this).board.myShips;
 
 		for(Ship s : theirShips){
 			if(s.isAlive()){
@@ -119,10 +118,20 @@ public class Client
 	//When a fire command is typed, this method parses the coordinates and launches a missle at the enemy
 	boolean processFireCmd( String [] s )
 	{
+		Position p = new Position(Integer.parseInt(s[1]),Integer.parseInt(s[2]));
+		Ship victimShip = null;
 		try{
-			targets.fireMissle(new Position(Integer.parseInt(s[1]),Integer.parseInt(s[2])));
+			victimShip = man.getOpponent(this).board.fireMissle(p);
 		}catch(Exception e){
 			return false;
+		}
+		
+		if(victimShip != null){
+			out.println(victimShip.name);
+			this.targets.cells.get(Integer.parseInt(s[1])).get(Integer.parseInt(s[2])).setShip(victimShip);
+			this.targets.cells.get(Integer.parseInt(s[1])).get(Integer.parseInt(s[2])).hasBeenStruckByMissile(true);
+		}else{
+			this.targets.cells.get(Integer.parseInt(s[1])).get(Integer.parseInt(s[2])).hasBeenStruckByMissile(true);
 		}
 		return true;
 
